@@ -101,12 +101,7 @@ modprobe.blacklist=nouveau pci=noaer pcie_aspm=off
 
 ---
 
-## Тестовый стенд
-* **OS:** Arch Linux (`6.18.65-1-lts`)
-* **Motherboard / BIOS:** `MXB1` / `JH_NXB1_AN_B814` (Intel Alder Lake)
-* **Wi-Fi Chip:** Realtek RTL8821CE (`10ec:c821`)
-* **File System:** Btrfs
-* 
+
 ## Настройка Wi-Fi после установки системы
 
 На чипе **Realtek RTL8821CE** стандартный `wpa_supplicant` часто работает нестабильно и приводит к обрывам связи. Оптимальный вариант — использовать связку **NetworkManager + iwd** (где `iwd` выступает в роли Wi-Fi бэкенда).
@@ -132,3 +127,9 @@ modprobe.blacklist=nouveau pci=noaer pcie_aspm=off
    ```bash
    nmcli device wifi connect "ИМЯ_СЕТИ" password "ПАРОЛЬ"
    ```
+## Тестовый стенд
+* **OS:** Arch Linux (`6.18.65-1-lts`)
+* **Motherboard / BIOS:** `MXB1` / `JH_NXB1_AN_B814` (Intel Alder Lake)
+* **Wi-Fi Chip:** Realtek RTL8821CE (`10ec:c821`)
+* **File System:** Btrfs
+* 
