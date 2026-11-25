@@ -126,6 +126,44 @@ modprobe.blacklist=nouveau pci=noaer pcie_aspm=off
 4. Подключитесь к сети через `nmcli` (или `nmtui`):
    ```bash
    nmcli device wifi connect "ИМЯ_СЕТИ" password "ПАРОЛЬ"
+## Переход на основное (свежее) ядро `linux` (проверено на `7.3.6-arch1-1`)
+
+Фикс полностью универсален и одинаково стабильно работает как на `linux-lts` (`6.18.x`), так и на свежей ветке основного ядра `linux` (`7.3.x+`). Вы можете держать оба ядра параллельно в меню `systemd-boot`, оставив `linux-lts` в качестве резервного.
+
+### 1. Установка ядра
+Установите пакет основного ядра и обновите систему:
+```bash
+sudo pacman -Syu linux
+```
+
+### 2. Настройка загрузчика `systemd-boot`
+
+#### Вариант А: Если используется UKI (Unified Kernel Image в `/boot/EFI/Linux/`)
+1. Убедитесь, что параметры `modprobe.blacklist=nouveau pci=noaer pcie_aspm=off` прописаны в `/etc/kernel/cmdline`.
+2. Откройте пресет `/etc/mkinitcpio.d/linux.preset`, закомментируйте `default_image` и включите сборку UKI в `/boot/EFI/Linux/`:
+   ```ini
+   PRESETS=('default')
+
+   #default_image="/boot/initramfs-linux.img"
+   default_uki="/boot/EFI/Linux/arch-linux.efi"
+   default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+   ```
+3. Соберите образ:
+   ```bash
+   sudo mkinitcpio -p linux
+   ```
+
+#### Вариант Б: Если используются классические конфиги в `/boot/loader/entries/`
+Скопируйте рабочий конфиг от LTS-ядра и уберите суффикс `-lts` из путей к ядру и initramfs (строка `options` с флагами ядра останется без изменений):
+```bash
+sudo sed 's/-lts//g' /boot/loader/entries/arch-lts.conf | sudo tee /boot/loader/entries/arch.conf
+```
+
+### 3. Проверка
+Перезагрузитесь (`reboot`), выберите в меню `systemd-boot` пункт **`Arch Linux (7.3.x-arch1-1)`** и проверьте стабильность сети:
+```bash
+ping -c 3 archlinux.org
+```
    ```
 ## Тестовый стенд
 * **OS:** Arch Linux (`6.18.65-1-lts`)
