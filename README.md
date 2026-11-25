@@ -107,3 +107,28 @@ modprobe.blacklist=nouveau pci=noaer pcie_aspm=off
 * **Wi-Fi Chip:** Realtek RTL8821CE (`10ec:c821`)
 * **File System:** Btrfs
 * 
+## Настройка Wi-Fi после установки системы
+
+На чипе **Realtek RTL8821CE** стандартный `wpa_supplicant` часто работает нестабильно и приводит к обрывам связи. Оптимальный вариант — использовать связку **NetworkManager + iwd** (где `iwd` выступает в роли Wi-Fi бэкенда).
+
+> **Важно:** Устанавливать и включать эти пакеты нужно **после** установки системы на диск и перезагрузки с новыми параметрами ядра. Если интернета ещё нет — временно раздайте его с телефона по USB-кабелю.
+
+1. Установите оба пакета:
+   ```bash
+   sudo pacman -S networkmanager iwd
+   ```
+
+2. Укажите `NetworkManager` использовать `iwd` вместо `wpa_supplicant` (чтобы службы не конфликтовали за адаптер):
+   ```bash
+   echo -e "[device]\nwifi.backend=iwd" | sudo tee /etc/NetworkManager/conf.d/wifi_backend.conf
+   ```
+
+3. Включите обе службы в автозапуск:
+   ```bash
+   sudo systemctl enable --now iwd NetworkManager
+   ```
+
+4. Подключитесь к сети через `nmcli` (или `nmtui`):
+   ```bash
+   nmcli device wifi connect "ИМЯ_СЕТИ" password "ПАРОЛЬ"
+   ```
