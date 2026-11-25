@@ -166,8 +166,9 @@ ping -c 3 archlinux.org
 ```
    ```
 ## Тестовый стенд
-* **OS:** Arch Linux (`6.18.65-1-lts`)
+
+* **OS:** Arch Linux (проверено на `6.18.65-1-lts` и `7.3.6-arch1-1`)
 * **Motherboard / BIOS:** `MXB1` / `JH_NXB1_AN_B814` (Intel Alder Lake)
 * **Wi-Fi Chip:** Realtek RTL8821CE (`10ec:c821`)
 * **File System:** Btrfs
-* 
+
